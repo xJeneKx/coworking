@@ -1,0 +1,15 @@
+{
+  "name": "biot-co-working1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "biot-core": "^0.1.23",
+    "ocore": "git+https://github.com/byteball/ocore.git"
+  }
+}
