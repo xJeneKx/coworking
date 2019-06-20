@@ -16,6 +16,10 @@ let profiles = {};
 	let wallets = await core.getMyDeviceWallets();
 	core.addCorrespondent('A20sbZ6knN/asHRHl3br1EAFaH0HvT/JT3NHE6RbkE3N@byteball.org/bb-test#test');
 	
+	eventBus.on('paired', (from_address) => {
+		core.sendTechMessageToDevice(from_address, {type: 'imapp'});
+	});
+	
 	eventBus.on('object', async (from_address, object) => {
 		console.error('msg', from_address, object);
 		if (object.app === 'BIoT') {
