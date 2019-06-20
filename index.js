@@ -14,7 +14,6 @@ let profiles = {};
 (async () => {
 	await core.init('biot-co-working');
 	let wallets = await core.getMyDeviceWallets();
-	core.addCorrespondent('A20sbZ6knN/asHRHl3br1EAFaH0HvT/JT3NHE6RbkE3N@byteball.org/bb-test#test');
 	
 	eventBus.on('paired', (from_address) => {
 		core.sendTechMessageToDevice(from_address, {type: 'imapp'});
@@ -136,7 +135,7 @@ async function checkProfile(address, unit, profile, device_address) {
 	await light_attestations.updateAttestationsInLight(address);
 	let rows = await db.query("SELECT 1 FROM attestations CROSS JOIN unit_authors USING(unit)\n\
 		WHERE attestations.address=? AND unit_authors.address IN(?) AND unit=?",
-		[address, "ZZDZCNEHG6UT2WHPAL7JPOCCMK4HROB7", unit]);
+		[address, "NJUSWNGMJ3NND4C4ZJ2DEDKW423FTULD", unit]);
 	if (rows.length) {
 		return new Promise(resolve => {
 			storage.readJoint(db, unit, {
