@@ -7,9 +7,7 @@ const objectHash = require('ocore/object_hash.js');
 const ChannelsManager = require('biot-core/lib/ChannelsManager');
 
 const SerialPort = require('serialport');
-const port = new SerialPort('/dev/ttyUSB0', { baudRate: 9600 });
-
-port.write('open1');
+const port = new SerialPort('/dev/ttyUSB0', {baudRate: 9600});
 
 const timeout = 20000; // 20 sec
 
@@ -96,9 +94,13 @@ let profiles = {};
 			console.error('channelError', channel.id, error);
 		});
 		channel.events.on('start', () => {
-			console.error('channel start. t.js', channel.id);
+			port.write('open1');
+			console.error('channel start ', channel.id);
 		});
 		channel.events.on('changed_step', (step) => {
+			if (step === 'mutualClose' || step === 'close') {
+				port.write('open1');
+			}
 			console.error('changed_step: ', step);
 		});
 		channel.events.on('new_transfer', async (amount) => {
