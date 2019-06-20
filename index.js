@@ -115,7 +115,7 @@ let profiles = {};
 		});
 		await channel.init();
 		if (await checkProfile(prms.address, prms.unit, prms.profile, channel.peerDeviceAddress) &&
-			channel.myAmount === 1 && channel.peerAmount === 1001) {
+			channel.myAmount === 1 && channel.peerAmount === 5001) {
 			await channel.approve();
 		} else {
 			await channel.reject();
