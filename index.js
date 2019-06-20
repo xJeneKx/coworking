@@ -11,10 +11,6 @@ const timeout = 20000; // 20 sec
 let openChannels = {};
 let profiles = {};
 
-let red = false;
-let green = false;
-let white = false;
-
 (async () => {
 	await core.init('biot-co-working');
 	let wallets = await core.getMyDeviceWallets();
@@ -77,13 +73,14 @@ let white = false;
 							]
 						});
 					}
-				} else if (object.req === 'switch_red') {
-					core.sendTextMessageToDevice('0CAV5L4E2TNVEX7LEOT3W7F5ZKJEXXSOT', 'red');
-				} else if (object.req === 'switch_green') {
-					core.sendTextMessageToDevice('0CAV5L4E2TNVEX7LEOT3W7F5ZKJEXXSOT', 'green');
-				} else if (object.req === 'switch_white') {
-					core.sendTextMessageToDevice('0CAV5L4E2TNVEX7LEOT3W7F5ZKJEXXSOT', 'blue');
 				}
+				// else if (object.req === 'switch_red') {
+				// 	core.sendTextMessageToDevice('0CAV5L4E2TNVEX7LEOT3W7F5ZKJEXXSOT', 'red');
+				// } else if (object.req === 'switch_green') {
+				// 	core.sendTextMessageToDevice('0CAV5L4E2TNVEX7LEOT3W7F5ZKJEXXSOT', 'green');
+				// } else if (object.req === 'switch_white') {
+				// 	core.sendTextMessageToDevice('0CAV5L4E2TNVEX7LEOT3W7F5ZKJEXXSOT', 'blue');
+				// }
 			}
 		}
 	});
