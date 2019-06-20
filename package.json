@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "biot-core": "^0.1.23",
+    "biot-core": "^0.1.x",
     "ocore": "git+https://github.com/byteball/ocore.git"
   }
 }
