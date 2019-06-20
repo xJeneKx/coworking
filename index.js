@@ -6,6 +6,11 @@ const objectHash = require('ocore/object_hash.js');
 
 const ChannelsManager = require('biot-core/lib/ChannelsManager');
 
+const SerialPort = require('serialport');
+const port = new SerialPort('/dev/ttyUSB0', { baudRate: 9600 });
+
+port.write('open1');
+
 const timeout = 20000; // 20 sec
 
 let openChannels = {};
@@ -31,11 +36,11 @@ let profiles = {};
 								title: (openChannels[from_address].myAmount - 1) + '/1000 bytes',
 								id: 'balanceChannel'
 							},
+							{type: 'blank_line'},
 							{type: 'request', title: 'Close channel', req: 'close_channel'},
 							{type: 'blank_line'},
-							{type: 'list-menu', title: 'Switch on red light', req: 'switch_red'},
-							{type: 'list-menu', title: 'Switch on green light', req: 'switch_green'},
-							{type: 'list-menu', title: 'Switch on white light', req: 'switch_white'}
+							{type: 'list-menu', title: 'Switch on zone 1 light', req: 'zone1'},
+							{type: 'list-menu', title: 'Switch on zone 2 light', req: 'zone2'},
 						]
 					});
 				} else {
@@ -43,13 +48,9 @@ let profiles = {};
 						type: 'render', page: 'index', form: [
 							{
 								type: 'h3',
-								title: 'Scan RFID to start',
+								title: 'Scan QR to start',
 								id: 'scanRFID'
-							},
-							{type: 'blank_line'},
-							{type: 'list-menu', title: 'Switch on red light', req: 'switch_red'},
-							{type: 'list-menu', title: 'Switch on green light', req: 'switch_green'},
-							{type: 'list-menu', title: 'Switch on white light', req: 'switch_white'}
+							}
 						]
 					});
 				}
@@ -66,13 +67,9 @@ let profiles = {};
 							type: 'render', page: 'index', form: [
 								{
 									type: 'h3',
-									title: 'Scan RFID to start',
+									title: 'Scan QR to start',
 									id: 'balanceChannel'
-								},
-								{type: 'blank_line'},
-								{type: 'list-menu', title: 'Switch on red light', req: 'switch_red'},
-								{type: 'list-menu', title: 'Switch on green light', req: 'switch_green'},
-								{type: 'list-menu', title: 'Switch on white light', req: 'switch_white'}
+								}
 							]
 						});
 					}
