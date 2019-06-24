@@ -13,6 +13,7 @@ const timeout = 20000; // 20 sec
 
 let openChannels = {};
 let profiles = {};
+let states = {};
 
 (async () => {
 	await core.init('biot-co-working');
@@ -35,10 +36,14 @@ let profiles = {};
 								id: 'balanceChannel'
 							},
 							{type: 'blank_line'},
-							{type: 'request', title: 'Close channel', req: 'close_channel'},
-							{type: 'blank_line'},
+							{type: 'list-menu', title: 'Use conference room', req: 'ucr', id: 'ucr'},
 							{type: 'list-menu', title: 'Switch on zone 1 light', req: 'zone1'},
 							{type: 'list-menu', title: 'Switch on zone 2 light', req: 'zone2'},
+							{type: 'blank_line'},
+							{type: 'list-menu', title: 'Use parking', req: 'up', id: 'up'},
+							{type: 'list-menu', title: 'Use charging', req: 'uc', id: 'uc'},
+							{type: 'blank_line'},
+							{type: 'request', title: 'Close channel', req: 'close_channel'},
 						]
 					});
 				} else {
@@ -53,6 +58,8 @@ let profiles = {};
 					});
 				}
 			} else if (object.type === 'request') {
+				if(!states[from_address]) states[from_address] = {};
+				
 				if (object.req === 'close_channel') {
 					let res = await openChannels[from_address].closeMutually();
 					if (res.error) {
@@ -69,6 +76,26 @@ let profiles = {};
 								}
 							]
 						});
+					}
+				} else if(obj.req === 'ucr'){
+					if(states[from_address].ucr){
+						core.sendTechMessageToDevice(from_address, {
+							type: 'update', id: 'ucr', value: {
+								type: 'list-menu',
+								title: 'Use conference room',
+								id: 'ucr'
+							}
+						});
+						states[from_address].ucr = 0;
+					}else{
+						core.sendTechMessageToDevice(from_address, {
+							type: 'update', id: 'ucr', value: {
+								type: 'list-menu',
+								title: 'Stop using conference room',
+								id: 'ucr'
+							}
+						});
+						states[from_address].ucr = 1;
 					}
 				}
 				// else if (object.req === 'switch_red') {
@@ -96,7 +123,7 @@ let profiles = {};
 			port.write('open1');
 			console.error('channel start ', channel.id);
 			await sleep(6000);
-			for(let i = 0; i < 5; i++){
+			for(let i = 0; i < 2500; i++){
 				channel.sendMessage({amount: 1});
 				await sleep(15000);
 			}
@@ -118,14 +145,14 @@ let profiles = {};
 			core.sendTechMessageToDevice(channel.peerDeviceAddress, {
 				type: 'update', id: 'balanceChannel', value: {
 					type: 'text',
-					title: (channel.myAmount - 1) + '/5000 bytes',
+					title: (channel.myAmount - 1) + '/7000 bytes',
 					id: 'balanceChannel'
 				}
 			});
 		});
 		await channel.init();
 		if (prms.address && (await checkProfile(prms.address, prms.unit, prms.profile, channel.peerDeviceAddress) &&
-			channel.myAmount === 1 && channel.peerAmount === 5001)) {
+			channel.myAmount === 1 && channel.peerAmount === 7001)) {
 			await channel.approve();
 		} else {
 			await channel.reject();
