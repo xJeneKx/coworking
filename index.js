@@ -58,7 +58,7 @@ let states = {};
 					});
 				}
 			} else if (object.type === 'request') {
-				if(!states[from_address]) states[from_address] = {};
+				if (!states[from_address]) states[from_address] = {};
 				
 				if (object.req === 'close_channel') {
 					let res = await openChannels[from_address].closeMutually();
@@ -77,25 +77,29 @@ let states = {};
 							]
 						});
 					}
-				} else if(object.req === 'ucr'){
-					if(states[from_address].ucr){
+				} else if (object.req === 'ucr') {
+					if (states[from_address].ucr) {
 						core.sendTechMessageToDevice(from_address, {
 							type: 'update', id: 'ucr', value: {
 								type: 'list-menu',
 								title: 'Use conference room',
-								id: 'ucr'
+								id: 'ucr',
+								req: 'ucr'
 							}
 						});
 						states[from_address].ucr = 0;
-					}else{
+						port.write('open1');
+					} else {
 						core.sendTechMessageToDevice(from_address, {
 							type: 'update', id: 'ucr', value: {
 								type: 'list-menu',
 								title: 'Stop using conference room',
-								id: 'ucr'
+								id: 'ucr',
+								req: 'ucr'
 							}
 						});
 						states[from_address].ucr = 1;
+						port.write('open1');
 					}
 				}
 				// else if (object.req === 'switch_red') {
@@ -123,8 +127,11 @@ let states = {};
 			port.write('open1');
 			console.error('channel start ', channel.id);
 			await sleep(6000);
-			for(let i = 0; i < 2500; i++){
-				channel.sendMessage({amount: 1});
+			for (let i = 0; i < 2500; i++) {
+				let sum = 1;
+				if (states[objInfo.peerDeviceAddress]) sum += 1;
+				console.error('sum', sum);
+				channel.sendMessage({amount: sum});
 				await sleep(15000);
 			}
 			
