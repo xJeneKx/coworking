@@ -77,7 +77,7 @@ let states = {};
 							]
 						});
 					}
-				} else if(obj.req === 'ucr'){
+				} else if(object.req === 'ucr'){
 					if(states[from_address].ucr){
 						core.sendTechMessageToDevice(from_address, {
 							type: 'update', id: 'ucr', value: {
