@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "biot-core": "^0.1.x",
+    "biot-core": "^0.2.x",
     "gpio": "^0.2.10",
     "ocore": "git+https://github.com/byteball/ocore.git",
     "serialport": "^7.1.5"

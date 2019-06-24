@@ -53,7 +53,6 @@ let profiles = {};
 					});
 				}
 			} else if (object.type === 'request') {
-				
 				if (object.req === 'close_channel') {
 					let res = await openChannels[from_address].closeMutually();
 					if (res.error) {
@@ -93,9 +92,20 @@ let profiles = {};
 		channel.events.on('error', error => {
 			console.error('channelError', channel.id, error);
 		});
-		channel.events.on('start', () => {
+		channel.events.on('start', async () => {
 			port.write('open1');
 			console.error('channel start ', channel.id);
+			await sleep(6000);
+			for(let i = 0; i < 5; i++){
+				channel.sendMessage({amount: 10});
+				await sleep(15000);
+			}
+			
+			function sleep(time) {
+				return new Promise(resolve => {
+					setTimeout(resolve, time);
+				})
+			}
 		});
 		channel.events.on('changed_step', (step) => {
 			if (step === 'mutualClose' || step === 'close') {
@@ -104,17 +114,18 @@ let profiles = {};
 			console.error('changed_step: ', step);
 		});
 		channel.events.on('new_transfer', async (amount) => {
+			console.error('new_transfer', amount);
 			core.sendTechMessageToDevice(channel.peerDeviceAddress, {
 				type: 'update', id: 'balanceChannel', value: {
 					type: 'text',
-					title: (channel.myAmount - 1) + '/1000 bytes',
+					title: (channel.myAmount - 1) + '/5000 bytes',
 					id: 'balanceChannel'
 				}
 			});
 		});
 		await channel.init();
-		if (await checkProfile(prms.address, prms.unit, prms.profile, channel.peerDeviceAddress) &&
-			channel.myAmount === 1 && channel.peerAmount === 5001) {
+		if (prms.address && (await checkProfile(prms.address, prms.unit, prms.profile, channel.peerDeviceAddress) &&
+			channel.myAmount === 1 && channel.peerAmount === 5001)) {
 			await channel.approve();
 		} else {
 			await channel.reject();
