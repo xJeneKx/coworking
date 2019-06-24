@@ -117,6 +117,7 @@ let states = {};
 	const channelsManager = new ChannelsManager(wallets[0], timeout);
 	
 	channelsManager.events.on('newChannel', async (objInfo) => {
+		let open = true;
 		console.error(objInfo);
 		let prms = objInfo.messageOnOpening;
 		let channel = channelsManager.getNewChannel(objInfo);
@@ -128,8 +129,9 @@ let states = {};
 			console.error('channel start ', channel.id);
 			await sleep(6000);
 			for (let i = 0; i < 2500; i++) {
+				if(!open) break;
 				let sum = 1;
-				if (states[objInfo.peerDeviceAddress]) sum += 1;
+				if (states[channel.peerDeviceAddress].ucr) sum += 1;
 				console.error('sum', sum);
 				channel.sendMessage({amount: sum});
 				await sleep(15000);
@@ -144,6 +146,8 @@ let states = {};
 		channel.events.on('changed_step', (step) => {
 			if (step === 'mutualClose' || step === 'close') {
 				port.write('open1');
+				open = false;
+				states[channel.peerDeviceAddress] = {};
 			}
 			console.error('changed_step: ', step);
 		});
