@@ -97,7 +97,7 @@ let profiles = {};
 			console.error('channel start ', channel.id);
 			await sleep(6000);
 			for(let i = 0; i < 5; i++){
-				channel.sendMessage({amount: 10});
+				channel.sendMessage({amount: 1});
 				await sleep(15000);
 			}
 			
