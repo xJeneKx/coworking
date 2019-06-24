@@ -88,7 +88,7 @@ let states = {};
 							}
 						});
 						states[from_address].ucr = 0;
-						port.write('open1');
+						port.write('open2');
 					} else {
 						core.sendTechMessageToDevice(from_address, {
 							type: 'update', id: 'ucr', value: {
@@ -99,7 +99,7 @@ let states = {};
 							}
 						});
 						states[from_address].ucr = 1;
-						port.write('open1');
+						port.write('open2');
 					}
 				}
 				// else if (object.req === 'switch_red') {
