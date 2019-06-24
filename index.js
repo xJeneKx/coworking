@@ -131,7 +131,7 @@ let states = {};
 			for (let i = 0; i < 2500; i++) {
 				if(!open) break;
 				let sum = 1;
-				if (states[channel.peerDeviceAddress].ucr) sum += 1;
+				if (states[channel.peerDeviceAddress] && states[channel.peerDeviceAddress].ucr) sum += 1;
 				console.error('sum', sum);
 				channel.sendMessage({amount: sum});
 				await sleep(15000);
