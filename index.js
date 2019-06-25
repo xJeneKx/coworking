@@ -167,6 +167,8 @@ let states = {};
 					} else if (parkingOwner === from_address) {
 						parkingOwner = null;
 						port.write('open3');
+						charging = false;
+						gpio27.set(charging);
 					} else {
 						core.sendTechMessageToDevice(from_address, {
 							type: 'alert', message: 'Parking already using'
