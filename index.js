@@ -251,7 +251,9 @@ let states = {};
 				port.write('open1');
 				open = false;
 				if (parkingOwner === channel.peerDeviceAddress) {
-					port.write('open3');
+					setTimeout(() => {
+						port.write('open3');
+					}, 1000);
 					parkingOwner = null;
 					charging = false;
 				}
