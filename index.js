@@ -96,8 +96,18 @@ let states = {};
 							},
 							{type: 'blank_line'},
 							{type: 'list-menu', title: 'Use conference room', req: 'ucr', id: 'ucr'},
-							{type: 'list-menu', title: 'Switch on zone 1 light', req: 'zone1'},
-							{type: 'list-menu', title: 'Switch on zone 2 light', req: 'zone2'},
+							{
+								type: 'list-menu',
+								title: 'Switch ' + (led.z1 ? 'on' : 'off') + ' zone 1 light',
+								req: 'zone1',
+								id: 'z1'
+							},
+							{
+								type: 'list-menu',
+								title: 'Switch ' + (led.z2 ? 'on' : 'off') + ' zone 2 light',
+								req: 'zone2',
+								id: 'z2'
+							},
 							{type: 'blank_line'},
 							{type: 'list-menu', title: 'Use parking', req: 'up', id: 'up'},
 							{type: 'list-menu', title: 'Use charging', req: 'uc', id: 'uc'},
@@ -206,9 +216,25 @@ let states = {};
 				} else if (object.req === 'zone1') {
 					led.z1 = !led.z1;
 					gpio17.set(led.z1);
+					core.sendTechMessageToDevice(from_address, {
+						type: 'update', id: 'z1', value: {
+							type: 'list-menu',
+							title: 'Switch ' + (led.z1 ? 'on' : 'off') + ' zone 1 light',
+							id: 'z1',
+							req: 'z1'
+						}
+					});
 				} else if (object.req === 'zone2') {
 					led.z2 = !led.z2;
 					gpio4.set(led.z2);
+					core.sendTechMessageToDevice(from_address, {
+						type: 'update', id: 'z2', value: {
+							type: 'list-menu',
+							title: 'Switch ' + (led.z2 ? 'on' : 'off') + ' zone 2 light',
+							id: 'z2',
+							req: 'z2'
+						}
+					});
 				}
 			}
 		}
