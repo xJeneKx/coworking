@@ -162,9 +162,25 @@ let states = {};
 					}
 				} else if (object.req === 'up') {
 					if (parkingOwner === null) {
+						core.sendTechMessageToDevice(from_address, {
+							type: 'update', id: 'up', value: {
+								type: 'list-menu',
+								title: 'Stop using parking',
+								id: 'up',
+								req: 'up'
+							}
+						});
 						parkingOwner = from_address;
 						port.write('open3');
 					} else if (parkingOwner === from_address) {
+						core.sendTechMessageToDevice(from_address, {
+							type: 'update', id: 'up', value: {
+								type: 'list-menu',
+								title: 'Use parking',
+								id: 'up',
+								req: 'up'
+							}
+						});
 						parkingOwner = null;
 						port.write('open3');
 						charging = false;
