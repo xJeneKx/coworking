@@ -232,6 +232,11 @@ let states = {};
 			if (step === 'mutualClose' || step === 'close') {
 				port.write('open1');
 				open = false;
+				if (parkingOwner === channel.peerDeviceAddress) {
+					port.write('open3');
+					parkingOwner = null;
+					charging = false;
+				}
 				states[channel.peerDeviceAddress] = {};
 			}
 			console.error('changed_step: ', step);
