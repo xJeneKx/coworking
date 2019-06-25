@@ -27,8 +27,8 @@ let gpio4 = gpio.export(4, {
 	// Due to the asynchronous nature of exporting a header, you may not be able to
 	// read or write to the header right away. Place your logic in this ready
 	// function to guarantee everything will get fired properly
-	ready: function() {
-		gpio4.set(1);
+	ready: function () {
+		gpio4.set(0);
 	}
 });// Calling export with a pin number will export that header and return a gpio header instance
 let gpio17 = gpio.export(17, {
@@ -43,8 +43,8 @@ let gpio17 = gpio.export(17, {
 	// Due to the asynchronous nature of exporting a header, you may not be able to
 	// read or write to the header right away. Place your logic in this ready
 	// function to guarantee everything will get fired properly
-	ready: function() {
-		gpio17.set(1);
+	ready: function () {
+		gpio17.set(0);
 	}
 });// Calling export with a pin number will export that header and return a gpio header instance
 let gpio27 = gpio.export(27, {
@@ -59,11 +59,13 @@ let gpio27 = gpio.export(27, {
 	// Due to the asynchronous nature of exporting a header, you may not be able to
 	// read or write to the header right away. Place your logic in this ready
 	// function to guarantee everything will get fired properly
-	ready: function() {
-		gpio27.set(1);
+	ready: function () {
+		gpio27.set(0);
 	}
 });
 
+let led = {z1: 0, z2: 0};
+let charging = false;
 
 
 let openChannels = {};
@@ -157,13 +159,13 @@ let states = {};
 						port.write('open2');
 					}
 				}
-				// else if (object.req === 'switch_red') {
-				// 	core.sendTextMessageToDevice('0CAV5L4E2TNVEX7LEOT3W7F5ZKJEXXSOT', 'red');
-				// } else if (object.req === 'switch_green') {
-				// 	core.sendTextMessageToDevice('0CAV5L4E2TNVEX7LEOT3W7F5ZKJEXXSOT', 'green');
-				// } else if (object.req === 'switch_white') {
-				// 	core.sendTextMessageToDevice('0CAV5L4E2TNVEX7LEOT3W7F5ZKJEXXSOT', 'blue');
-				// }
+				else if (object.req === 'zone1') {
+					led.z1 = !led.z1;
+					gpio17.set(led.z1);
+				} else if (object.req === 'zone2') {
+					led.z2 = !led.z2;
+					gpio4.set(led.z2);
+				}
 			}
 		}
 	});
@@ -184,7 +186,7 @@ let states = {};
 			console.error('channel start ', channel.id);
 			await sleep(6000);
 			for (let i = 0; i < 2500; i++) {
-				if(!open) break;
+				if (!open) break;
 				let sum = 1;
 				if (states[channel.peerDeviceAddress] && states[channel.peerDeviceAddress].ucr) sum += 1;
 				console.error('sum', sum);
