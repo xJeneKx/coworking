@@ -65,6 +65,8 @@ let gpio27 = gpio.export(27, {
 });
 
 let led = {z1: 0, z2: 0};
+
+let parkingOwner = null;
 let charging = false;
 
 
@@ -158,8 +160,32 @@ let states = {};
 						states[from_address].ucr = 1;
 						port.write('open2');
 					}
-				}
-				else if (object.req === 'zone1') {
+				} else if (object.req === 'up') {
+					if (parkingOwner === null) {
+						parkingOwner = from_address;
+						port.write('open3');
+					} else if (parkingOwner === from_address) {
+						parkingOwner = null;
+						port.write('open3');
+					} else {
+						core.sendTechMessageToDevice(from_address, {
+							type: 'alert', message: 'Parking already using'
+						});
+					}
+				} else if (object.req === 'uc') {
+					if (parkingOwner === null) {
+						core.sendTechMessageToDevice(from_address, {
+							type: 'alert', message: 'First rent the parking'
+						});
+					} else if (parkingOwner !== from_address) {
+						core.sendTechMessageToDevice(from_address, {
+							type: 'alert', message: 'Parking is used by another user'
+						});
+					} else if (parkingOwner === from_address) {
+						charging = !charging;
+						gpio27.set(charging);
+					}
+				} else if (object.req === 'zone1') {
 					led.z1 = !led.z1;
 					gpio17.set(led.z1);
 				} else if (object.req === 'zone2') {
@@ -189,6 +215,8 @@ let states = {};
 				if (!open) break;
 				let sum = 1;
 				if (states[channel.peerDeviceAddress] && states[channel.peerDeviceAddress].ucr) sum += 1;
+				if (parkingOwner === channel.peerDeviceAddress) sum += 1;
+				if (parkingOwner === channel.peerDeviceAddress && charging) sum += 1;
 				console.error('sum', sum);
 				channel.sendMessage({amount: sum});
 				await sleep(15000);
