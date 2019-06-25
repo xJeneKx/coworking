@@ -248,6 +248,7 @@ let states = {};
 		});
 		channel.events.on('changed_step', (step) => {
 			if (step === 'mutualClose' || step === 'close') {
+				if (states[channel.peerDeviceAddress] && states[channel.peerDeviceAddress].ucr) port.write('open2\n');
 				port.write('open1\n');
 				open = false;
 				if (parkingOwner === channel.peerDeviceAddress) {
