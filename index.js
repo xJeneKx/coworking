@@ -147,7 +147,7 @@ let states = {};
 							}
 						});
 						states[from_address].ucr = 0;
-						port.write('open2');
+						port.write('open2\n');
 					} else {
 						core.sendTechMessageToDevice(from_address, {
 							type: 'update', id: 'ucr', value: {
@@ -158,7 +158,7 @@ let states = {};
 							}
 						});
 						states[from_address].ucr = 1;
-						port.write('open2');
+						port.write('open2\n');
 					}
 				} else if (object.req === 'up') {
 					if (parkingOwner === null) {
@@ -171,7 +171,7 @@ let states = {};
 							}
 						});
 						parkingOwner = from_address;
-						port.write('open3');
+						port.write('open3\n');
 					} else if (parkingOwner === from_address) {
 						core.sendTechMessageToDevice(from_address, {
 							type: 'update', id: 'up', value: {
@@ -182,7 +182,7 @@ let states = {};
 							}
 						});
 						parkingOwner = null;
-						port.write('open3');
+						port.write('open3\n');
 						charging = false;
 						gpio27.set(charging);
 					} else {
@@ -226,7 +226,7 @@ let states = {};
 			console.error('channelError', channel.id, error);
 		});
 		channel.events.on('start', async () => {
-			port.write('open1');
+			port.write('open1\n');
 			console.error('channel start ', channel.id);
 			await sleep(6000);
 			for (let i = 0; i < 2500; i++) {
@@ -248,14 +248,15 @@ let states = {};
 		});
 		channel.events.on('changed_step', (step) => {
 			if (step === 'mutualClose' || step === 'close') {
-				port.write('open1');
+				port.write('open1\n');
 				open = false;
 				if (parkingOwner === channel.peerDeviceAddress) {
 					setTimeout(() => {
-						port.write('open3');
+						port.write('open3\n');
 					}, 1000);
 					parkingOwner = null;
 					charging = false;
+					gpio27.set(charging);
 				}
 				states[channel.peerDeviceAddress] = {};
 			}
