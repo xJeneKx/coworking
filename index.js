@@ -98,13 +98,13 @@ let states = {};
 							{type: 'list-menu', title: 'Use conference room', req: 'ucr', id: 'ucr'},
 							{
 								type: 'list-menu',
-								title: 'Switch ' + (led.z1 ? 'on' : 'off') + ' zone 1 light',
+								title: 'Switch ' + (!led.z1 ? 'on' : 'off') + ' zone 1 light',
 								req: 'zone1',
 								id: 'z1'
 							},
 							{
 								type: 'list-menu',
-								title: 'Switch ' + (led.z2 ? 'on' : 'off') + ' zone 2 light',
+								title: 'Switch ' + (!led.z2 ? 'on' : 'off') + ' zone 2 light',
 								req: 'zone2',
 								id: 'z2'
 							},
@@ -219,9 +219,9 @@ let states = {};
 					core.sendTechMessageToDevice(from_address, {
 						type: 'update', id: 'z1', value: {
 							type: 'list-menu',
-							title: 'Switch ' + (led.z1 ? 'on' : 'off') + ' zone 1 light',
+							title: 'Switch ' + (!led.z1 ? 'on' : 'off') + ' zone 1 light',
 							id: 'z1',
-							req: 'z1'
+							req: 'zone1'
 						}
 					});
 				} else if (object.req === 'zone2') {
@@ -230,9 +230,9 @@ let states = {};
 					core.sendTechMessageToDevice(from_address, {
 						type: 'update', id: 'z2', value: {
 							type: 'list-menu',
-							title: 'Switch ' + (led.z2 ? 'on' : 'off') + ' zone 2 light',
+							title: 'Switch ' + (!led.z2 ? 'on' : 'off') + ' zone 2 light',
 							id: 'z2',
-							req: 'z2'
+							req: 'zone2'
 						}
 					});
 				}
